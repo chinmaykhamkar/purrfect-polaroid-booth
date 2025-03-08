@@ -1,7 +1,7 @@
 
 import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Camera, X, Download, Loader2 } from "lucide-react";
+import { Camera, X, Download, Loader2, Cat } from "lucide-react";
 import { toast } from "sonner";
 import { scaleIn, countAnimation, fadeIn } from "@/lib/animations";
 import { downloadPhotoReel } from "@/lib/photoUtils";
