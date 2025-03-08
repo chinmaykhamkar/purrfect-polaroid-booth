@@ -1,10 +1,12 @@
+
 import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Camera, X, Cat } from "lucide-react";
+import { Camera, X, Download, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import { scaleIn, countAnimation, fadeIn } from "@/lib/animations";
-import PolaroidFrame from "./PolaroidFrame";
+import { downloadPhotoReel } from "@/lib/photoUtils";
 import ColorPicker from "./ColorPicker";
+import PhotoReel from "./PhotoReel";
 
 const PhotoBooth = () => {
   const [isBoothActive, setIsBoothActive] = useState(false);
@@ -12,19 +14,21 @@ const PhotoBooth = () => {
   const [countdownValue, setCountdownValue] = useState<null | number>(null);
   const [capturedPhotos, setCapturedPhotos] = useState<string[]>([]);
   const [currentPhotoIndex, setCurrentPhotoIndex] = useState(0);
-  const [selectedColor, setSelectedColor] = useState("#FFFFFF");
+  const [selectedColor, setSelectedColor] = useState("#FFF8E1");
+  const [isDownloading, setIsDownloading] = useState(false);
   
   const videoRef = useRef<HTMLVideoElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const streamRef = useRef<MediaStream | null>(null);
+  const photoReelRef = useRef<HTMLDivElement>(null);
   
   const startCamera = async () => {
     try {
       const constraints = {
         video: {
-          width: { ideal: 1280 },
-          height: { ideal: 720 },
-          facingMode: "user"
+          facingMode: "user",
+          width: { ideal: window.innerWidth < 768 ? 720 : 1280 },
+          height: { ideal: window.innerWidth < 768 ? 1280 : 720 }
         },
         audio: false
       };
@@ -123,6 +127,18 @@ const PhotoBooth = () => {
     }, 3000);
   };
   
+  const handleDownload = async () => {
+    setIsDownloading(true);
+    const success = await downloadPhotoReel(photoReelRef);
+    setIsDownloading(false);
+    
+    if (success) {
+      toast.success("Photo reel downloaded successfully!");
+    } else {
+      toast.error("Failed to download photos. Please try again.");
+    }
+  };
+  
   useEffect(() => {
     return () => {
       stopCamera();
@@ -130,14 +146,14 @@ const PhotoBooth = () => {
   }, []);
   
   return (
-    <div className="w-full max-w-6xl mx-auto relative">
+    <div className="w-full max-w-6xl mx-auto relative px-4">
       {!isBoothActive ? (
         <motion.div 
-          className="text-center py-20"
+          className="text-center py-10 md:py-20"
           {...fadeIn}
         >
           <motion.h2 
-            className="text-4xl md:text-5xl lg:text-6xl mb-6 max-w-4xl mx-auto leading-tight"
+            className="text-3xl md:text-5xl lg:text-6xl mb-6 max-w-4xl mx-auto leading-tight font-display"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.3 }}
@@ -147,12 +163,12 @@ const PhotoBooth = () => {
           </motion.h2>
           
           <motion.p 
-            className="text-lg md:text-xl text-muted-foreground mb-10 max-w-2xl mx-auto"
+            className="text-base md:text-xl text-muted-foreground mb-6 md:mb-10 max-w-2xl mx-auto"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.4 }}
           >
-            Take three perfect shots and get them instantly in adorable polaroid frames.
+            Take three perfect shots and get them instantly in an adorable polaroid reel.
             Customize colors and create memories to cherish.
           </motion.p>
           
@@ -163,45 +179,42 @@ const PhotoBooth = () => {
             className="relative inline-block"
           >
             <motion.div 
-              className="absolute -top-8 -right-8 text-primary"
+              className="absolute -top-6 -right-6 md:-top-8 md:-right-8 text-primary"
               animate={{ rotate: [0, 15, 0, 15, 0], y: [0, -5, 0, -5, 0] }}
               transition={{ duration: 5, repeat: Infinity, repeatType: "loop" }}
             >
-              <Cat className="w-10 h-10" />
+              <Cat className="w-8 h-8 md:w-10 md:h-10" />
             </motion.div>
             
             <motion.button
-              className="bg-primary text-white rounded-full px-8 py-4 text-lg font-medium flex items-center gap-3 shadow-lg hover:shadow-xl transition-all duration-300 hover:bg-primary/90"
+              className="bg-primary text-white rounded-full px-6 py-3 md:px-8 md:py-4 text-base md:text-lg font-medium flex items-center gap-2 md:gap-3 shadow-lg hover:shadow-xl transition-all duration-300 hover:bg-primary/90"
               onClick={startPhotoSession}
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
             >
-              <Camera className="w-5 h-5" />
+              <Camera className="w-4 h-4 md:w-5 md:h-5" />
               Start Photo Booth
             </motion.button>
           </motion.div>
           
           <motion.div 
-            className="mt-20 flex flex-wrap justify-center gap-6"
+            className="mt-12 md:mt-20 flex flex-wrap justify-center gap-4 md:gap-6"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 1, delay: 0.7 }}
           >
-            <img 
-              src="/placeholder.svg" 
-              alt="Sample polaroid" 
-              className="w-64 h-80 object-cover rounded-sm shadow-polaroid transform rotate-[-3deg] bg-cream"
-            />
-            <img 
-              src="/placeholder.svg" 
-              alt="Sample polaroid" 
-              className="w-64 h-80 object-cover rounded-sm shadow-polaroid transform rotate-[2deg] bg-softPink"
-            />
-            <img 
-              src="/placeholder.svg" 
-              alt="Sample polaroid" 
-              className="w-64 h-80 object-cover rounded-sm shadow-polaroid transform rotate-[-1deg] bg-paleBlue"
-            />
+            <motion.div
+              className="w-56 md:w-64 relative"
+              initial={{ y: 50, opacity: 0, rotate: -3 }}
+              animate={{ y: 0, opacity: 1, rotate: -3 }}
+              transition={{ duration: 0.6, delay: 0.8 }}
+            >
+              <img 
+                src={`${import.meta.env.BASE_URL || '/'}placeholder.svg`} 
+                alt="Sample polaroid" 
+                className="w-full h-auto object-cover rounded-sm shadow-polaroid bg-cream"
+              />
+            </motion.div>
           </motion.div>
         </motion.div>
       ) : (
@@ -215,7 +228,7 @@ const PhotoBooth = () => {
               className="bg-white/80 backdrop-blur-sm p-2 rounded-full shadow-md hover:bg-white transition-colors duration-200"
               aria-label="Close photo booth"
             >
-              <X className="w-6 h-6 text-gray-700" />
+              <X className="w-5 h-5 md:w-6 md:h-6 text-gray-700" />
             </button>
           </motion.div>
           
@@ -229,7 +242,7 @@ const PhotoBooth = () => {
                 <div className="relative">
                   <video 
                     ref={videoRef} 
-                    className="w-full max-h-[70vh] rounded-2xl"
+                    className="w-full max-h-[70vh] rounded-2xl object-cover"
                     autoPlay 
                     playsInline
                     muted
@@ -243,7 +256,7 @@ const PhotoBooth = () => {
                       >
                         <motion.div
                           key={`countdown-${countdownValue}`}
-                          className="text-6xl font-bold text-white font-display"
+                          className="text-5xl md:text-6xl font-bold text-white font-display"
                           {...countAnimation}
                         >
                           {countdownValue}
@@ -254,10 +267,10 @@ const PhotoBooth = () => {
                   
                   <canvas ref={canvasRef} className="hidden" />
                   
-                  <div className="absolute bottom-0 left-0 w-full p-6 flex justify-between items-center bg-gradient-to-t from-black/70 to-transparent">
+                  <div className="absolute bottom-0 left-0 w-full p-4 md:p-6 flex justify-between items-center bg-gradient-to-t from-black/70 to-transparent">
                     <div className="text-white">
-                      <h3 className="text-lg font-medium font-cute">Photo {currentPhotoIndex + 1} of 3</h3>
-                      <p className="text-white/70 text-sm">
+                      <h3 className="text-base md:text-lg font-medium font-cute">Photo {currentPhotoIndex + 1} of 3</h3>
+                      <p className="text-white/70 text-xs md:text-sm">
                         {capturedPhotos.length === 0 
                           ? "Get ready for your first shot!" 
                           : `${3 - capturedPhotos.length} more to go!`}
@@ -267,12 +280,12 @@ const PhotoBooth = () => {
                     {isCameraReady && countdownValue === null && (
                       <motion.button
                         onClick={startCountdown}
-                        className="bg-white text-black px-6 py-3 rounded-full flex items-center gap-2 font-medium shadow-lg hover:bg-white/90 transition-colors duration-200"
+                        className="bg-white text-black px-4 py-2 md:px-6 md:py-3 rounded-full flex items-center gap-2 text-sm md:text-base font-medium shadow-lg hover:bg-white/90 transition-colors duration-200"
                         whileHover={{ scale: 1.05 }}
                         whileTap={{ scale: 0.95 }}
                         disabled={countdownValue !== null}
                       >
-                        <Camera className="w-5 h-5" />
+                        <Camera className="w-4 h-4 md:w-5 md:h-5" />
                         {capturedPhotos.length === 0 ? "Take Photo" : "Next Photo"}
                       </motion.button>
                     )}
@@ -282,72 +295,76 @@ const PhotoBooth = () => {
             ) : (
               <motion.div 
                 key="results" 
-                className="py-10 bg-gray-50 rounded-2xl"
+                className="py-8 md:py-10 bg-gray-50 rounded-2xl"
                 {...fadeIn}
               >
-                <div className="max-w-4xl mx-auto text-center">
+                <div className="max-w-md mx-auto text-center px-4">
                   <motion.h2 
-                    className="text-3xl md:text-4xl font-display mb-4"
+                    className="text-2xl md:text-3xl font-display mb-3 md:mb-4"
                     initial={{ opacity: 0, y: -20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.5 }}
                   >
-                    Your Purrfect Polaroids!
+                    Your Purrfect Polaroid!
                   </motion.h2>
                   
                   <motion.p 
-                    className="text-muted-foreground mb-10"
+                    className="text-sm md:text-base text-muted-foreground mb-6 md:mb-8"
                     initial={{ opacity: 0, y: -20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.5, delay: 0.1 }}
                   >
-                    Customize your frame color and download your memories
+                    Customize your frame color and download your photo reel
                   </motion.p>
                   
-                  <div className="mb-8">
+                  <div className="mb-6 md:mb-8">
                     <ColorPicker 
                       selectedColor={selectedColor} 
                       onChange={setSelectedColor} 
                     />
                   </div>
                   
-                  <motion.div 
-                    className="flex flex-wrap justify-center gap-6 mb-10"
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    transition={{ duration: 0.5, delay: 0.3 }}
+                  <motion.div
+                    initial={{ opacity: 0, y: 50 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.6, delay: 0.2 }}
+                    className="mt-4 mb-8"
                   >
-                    {capturedPhotos.map((photo, index) => (
-                      <PolaroidFrame 
-                        key={index}
-                        image={photo}
-                        color={selectedColor}
-                        index={index}
-                      />
-                    ))}
+                    <div ref={photoReelRef}>
+                      <PhotoReel photos={capturedPhotos} color={selectedColor} />
+                    </div>
                   </motion.div>
                   
                   <motion.div 
-                    className="flex gap-4 justify-center"
+                    className="flex flex-col sm:flex-row gap-3 justify-center"
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.5, delay: 0.5 }}
                   >
                     <button
                       onClick={resetAndTakeMore}
-                      className="px-6 py-3 rounded-full border border-gray-300 text-gray-700 hover:bg-gray-100 transition-colors duration-200 flex items-center gap-2"
+                      className="w-full sm:w-auto px-4 py-2 md:px-6 md:py-3 rounded-full border border-gray-300 text-gray-700 hover:bg-gray-100 transition-colors duration-200 flex items-center justify-center gap-2"
                     >
-                      <Camera className="w-5 h-5" />
+                      <Camera className="w-4 h-4 md:w-5 md:h-5" />
                       Take More Photos
                     </button>
                     
                     <button
-                      onClick={() => {
-                        toast.success("Photos downloaded successfully!");
-                      }}
-                      className="px-6 py-3 rounded-full bg-primary text-white hover:bg-primary/90 transition-colors duration-200"
+                      onClick={handleDownload}
+                      disabled={isDownloading}
+                      className="w-full sm:w-auto px-4 py-2 md:px-6 md:py-3 rounded-full bg-primary text-white hover:bg-primary/90 transition-colors duration-200 flex items-center justify-center gap-2"
                     >
-                      Download All
+                      {isDownloading ? (
+                        <>
+                          <Loader2 className="w-4 h-4 md:w-5 md:h-5 animate-spin" />
+                          Processing...
+                        </>
+                      ) : (
+                        <>
+                          <Download className="w-4 h-4 md:w-5 md:h-5" />
+                          Download Photo Reel
+                        </>
+                      )}
                     </button>
                   </motion.div>
                 </div>
