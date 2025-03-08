@@ -1,4 +1,3 @@
-
 import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Camera, X, Cat } from "lucide-react";
@@ -19,7 +18,6 @@ const PhotoBooth = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const streamRef = useRef<MediaStream | null>(null);
   
-  // Function to start the camera
   const startCamera = async () => {
     try {
       const constraints = {
@@ -51,7 +49,6 @@ const PhotoBooth = () => {
     }
   };
   
-  // Function to stop the camera
   const stopCamera = () => {
     if (streamRef.current) {
       streamRef.current.getTracks().forEach(track => track.stop());
@@ -60,36 +57,29 @@ const PhotoBooth = () => {
     }
   };
   
-  // Function to capture a photo
   const capturePhoto = () => {
     if (videoRef.current && canvasRef.current) {
       const video = videoRef.current;
       const canvas = canvasRef.current;
       
-      // Set canvas dimensions to match video
       canvas.width = video.videoWidth;
       canvas.height = video.videoHeight;
       
-      // Draw the current video frame to the canvas
       const context = canvas.getContext("2d");
       if (context) {
         context.drawImage(video, 0, 0, canvas.width, canvas.height);
         
-        // Convert the canvas to a data URL (base64 string)
         const photoUrl = canvas.toDataURL("image/jpeg");
         
-        // Add the photo to the captured photos array
         setCapturedPhotos(prev => [...prev, photoUrl]);
         setCurrentPhotoIndex(prev => prev + 1);
         
-        // Play a camera shutter sound
         const shutterSound = new Audio("/shutter.mp3");
         shutterSound.play().catch(err => console.log("Audio playback error:", err));
       }
     }
   };
   
-  // Function to start the photobooth session
   const startPhotoSession = () => {
     setIsBoothActive(true);
     setCapturedPhotos([]);
@@ -97,25 +87,21 @@ const PhotoBooth = () => {
     startCamera();
   };
   
-  // Function to close the photobooth
   const closePhotoBooth = () => {
     stopCamera();
     setIsBoothActive(false);
     setCountdownValue(null);
   };
   
-  // Reset and take more photos
   const resetAndTakeMore = () => {
     setCapturedPhotos([]);
     setCurrentPhotoIndex(0);
     startCamera();
   };
   
-  // Start countdown and take photos
   const startCountdown = () => {
     setCountdownValue(3);
     
-    // Start the countdown
     const countdown = setInterval(() => {
       setCountdownValue(prev => {
         if (prev === null || prev <= 1) {
@@ -126,21 +112,17 @@ const PhotoBooth = () => {
       });
     }, 1000);
     
-    // Take the photo when countdown reaches 1
     setTimeout(() => {
       capturePhoto();
       
-      // If we haven't taken 3 photos yet, start another countdown
       if (currentPhotoIndex < 2) {
         setTimeout(() => startCountdown(), 500);
       } else {
-        // After the third photo, stop the camera
         setTimeout(() => stopCamera(), 1000);
       }
     }, 3000);
   };
   
-  // Cleanup when component unmounts
   useEffect(() => {
     return () => {
       stopCamera();
@@ -333,7 +315,7 @@ const PhotoBooth = () => {
                     className="flex flex-wrap justify-center gap-6 mb-10"
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
-                    transition={{ duration: 0.5, delay: a0.3 }}
+                    transition={{ duration: 0.5, delay: 0.3 }}
                   >
                     {capturedPhotos.map((photo, index) => (
                       <PolaroidFrame 
