@@ -1,4 +1,3 @@
-
 import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Camera, X, Download, Loader2, Cat } from "lucide-react";
@@ -24,6 +23,8 @@ const PhotoBooth = () => {
   
   const startCamera = async () => {
     try {
+      stopCamera();
+      
       const constraints = {
         video: {
           facingMode: "user",
@@ -100,7 +101,11 @@ const PhotoBooth = () => {
   const resetAndTakeMore = () => {
     setCapturedPhotos([]);
     setCurrentPhotoIndex(0);
-    startCamera();
+    setIsCameraReady(false);
+    
+    setTimeout(() => {
+      startCamera();
+    }, 100);
   };
   
   const startCountdown = () => {
