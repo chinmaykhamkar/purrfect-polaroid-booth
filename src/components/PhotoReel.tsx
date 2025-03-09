@@ -28,14 +28,14 @@ const PhotoReel = ({ photos, color }: PhotoReelProps) => {
   
   return (
     <motion.div
-      className="relative w-64 md:w-72 mx-auto bg-white p-4 rounded-lg shadow-md"
+      className="relative w-72 md:w-80 mx-auto bg-white p-4 shadow-xl"
       style={{ backgroundColor: "#fff" }}
       initial="hidden"
       animate="visible"
       variants={containerVariants}
     >
       <motion.div
-        className="relative rounded-sm overflow-hidden"
+        className="relative overflow-hidden"
         style={{ 
           backgroundColor: color,
           transform: `rotate(${randomRotate}deg)`,
@@ -52,7 +52,8 @@ const PhotoReel = ({ photos, color }: PhotoReelProps) => {
               <img 
                 src={photo} 
                 alt={`Photo ${index + 1}`}
-                className="w-full object-cover rounded-sm border border-gray-100"
+                className="w-full h-64 md:h-72 object-cover border border-gray-100"
+                style={{ aspectRatio: "1/1" }}
               />
             </div>
           ))}
