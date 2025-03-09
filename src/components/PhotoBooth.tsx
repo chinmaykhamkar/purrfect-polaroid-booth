@@ -17,11 +17,27 @@ const PhotoBooth = () => {
   const [isDownloading, setIsDownloading] = useState(false);
   // Track if the photo sequence has been started by the user
   const [hasStartedPhotoSequence, setHasStartedPhotoSequence] = useState(false);
+  // Track if we're on mobile
+  const [isMobile, setIsMobile] = useState(false);
 
   const videoRef = useRef<HTMLVideoElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const streamRef = useRef<MediaStream | null>(null);
   const photoReelRef = useRef<HTMLDivElement>(null);
+
+  // Check if we're on mobile
+  useEffect(() => {
+    const checkIfMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    
+    checkIfMobile();
+    window.addEventListener('resize', checkIfMobile);
+    
+    return () => {
+      window.removeEventListener('resize', checkIfMobile);
+    };
+  }, []);
 
   const startCamera = async () => {
     try {
@@ -282,13 +298,17 @@ const PhotoBooth = () => {
               <motion.div
                 key="camera"
                 className="relative bg-black rounded-2xl overflow-hidden shadow-lg"
+                style={{ 
+                  height: isMobile ? 'calc(100vh - 120px)' : 'auto', // Fill most of the screen on mobile
+                  marginBottom: isMobile ? '80px' : '0', // Space for the toast notification
+                }}
                 {...scaleIn}
               >
-                <div className="relative">
+                <div className="relative h-full">
                   <video
                     ref={videoRef}
-                    className="w-full max-h-[70vh] rounded-2xl object-cover"
-                    style={{ transform: "scaleX(-1)" }} 
+                    className="w-full h-full rounded-2xl object-cover"
+                    style={{ transform: "scaleX(-1)" }}  // Mirror the video for the preview
                     autoPlay
                     playsInline
                     muted
@@ -326,13 +346,13 @@ const PhotoBooth = () => {
                     {isCameraReady && countdownValue === null && !hasStartedPhotoSequence && (
                       <motion.button
                         onClick={startCountdown}
-                        className="bg-white text-black px-4 py-2 md:px-6 md:py-3 rounded-full flex items-center gap-2 text-sm md:text-base font-medium shadow-lg hover:bg-white/90 transition-colors duration-200"
+                        className="bg-white text-black px-4 py-2 md:px-6 md:py-3 rounded-full flex items-center gap-2 text-sm md:text-base font-medium shadow-lg hover:bg-white/90 transition-colors duration-200 whitespace-nowrap"
                         whileHover={{ scale: 1.05 }}
                         whileTap={{ scale: 0.95 }}
                         disabled={countdownValue !== null}
                       >
                         <Camera className="w-4 h-4 md:w-5 md:h-5" />
-                        Take Photo
+                        {isMobile ? "Take" : "Take Photo"}
                       </motion.button>
                     )}
                   </div>
