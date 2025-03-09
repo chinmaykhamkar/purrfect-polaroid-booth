@@ -2,6 +2,7 @@
 import { motion } from "framer-motion";
 import { format } from "date-fns";
 import { Cat } from "lucide-react";
+import { polaroidAnimation } from "@/lib/animations";
 
 interface PhotoReelProps {
   photos: string[];
@@ -10,16 +11,25 @@ interface PhotoReelProps {
 
 const PhotoReel = ({ photos, color }: PhotoReelProps) => {
   const today = format(new Date(), "MMMM d, yyyy");
-  const randomRotate = Math.random() * 4 - 2; // Random rotation between -2 and 2 degrees
+  const fixedRotate = 1.5; // Fixed subtle rotation of 1.5 degrees
   
-  // Animation for photos dropping from above
+  // Animation for photos dropping from above with a more realistic feel
   const containerVariants = {
-    hidden: { opacity: 0, y: -100 },
+    hidden: { 
+      opacity: 0, 
+      y: -200,
+      rotate: fixedRotate - 5
+    },
     visible: { 
       opacity: 1, 
       y: 0,
+      rotate: fixedRotate,
       transition: { 
-        duration: 0.8,
+        type: "spring",
+        mass: 0.8,
+        damping: 12,
+        stiffness: 100,
+        duration: 1.2,
         ease: "easeOut",
         when: "beforeChildren"
       }
@@ -38,10 +48,9 @@ const PhotoReel = ({ photos, color }: PhotoReelProps) => {
         className="relative overflow-hidden"
         style={{ 
           backgroundColor: color,
-          transform: `rotate(${randomRotate}deg)`,
           transformOrigin: "center" 
         }}
-        whileHover={{ rotate: 0, transition: { duration: 0.3 } }}
+        whileHover={{ scale: 1.02, transition: { duration: 0.3 } }}
       >
         <div className="p-2">
           {photos.map((photo, index) => (
