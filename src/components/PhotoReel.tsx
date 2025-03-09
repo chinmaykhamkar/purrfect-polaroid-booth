@@ -10,7 +10,7 @@ interface PhotoReelProps {
 
 const PhotoReel = ({ photos, color }: PhotoReelProps) => {
   const today = format(new Date(), "MMMM d, yyyy");
-  const fixedRotate = 0.8; // Fixed subtle rotation of 1.5 degrees
+  const fixedRotate = 1.5; // Fixed subtle rotation of 1.5 degrees
   
   // Animation for photos dropping from above with a more realistic feel
   const containerVariants = {
@@ -34,13 +34,13 @@ const PhotoReel = ({ photos, color }: PhotoReelProps) => {
   };
   
   return (
-    <div className="download-container" style={{ width: "100%", maxWidth: "350px", margin: "0 auto", transform: `rotate(${fixedRotate}deg)` }}>
+    <div className="download-container" style={{ width: "100%", maxWidth: "350px", margin: "0 auto" }}>
       <motion.div
-        className="relative w-full mx-auto overflow-hidden p-4 shadow-xl"
+        className="relative w-full mx-auto overflow-hidden p-4 shadow-xl rounded-sm"
         style={{ 
-          backgroundColor: color,
-          transformOrigin: "center",
-          minHeight: photos.length > 0 ? `${(photos.length * 200) + 50}px` : "600px"
+          backgroundColor: color, 
+          transform: `rotate(${fixedRotate}deg)`,
+          transformOrigin: "center"
         }}
         initial="hidden"
         animate="visible"
@@ -58,14 +58,20 @@ const PhotoReel = ({ photos, color }: PhotoReelProps) => {
                   src={photo} 
                   alt={`Photo ${index + 1}`}
                   className="w-full h-auto object-cover border border-gray-100"
-                  style={{ maxHeight: "180px" }}
+                  style={{ 
+                    maxHeight: "180px",
+                    imageRendering: "high-quality" // Hint for browser to use highest quality
+                  }}
+                  // Ensure images load properly for html2canvas
+                  crossOrigin="anonymous"
+                  loading="eager"
                 />
               </div>
             ))}
           </div>
           
           <div className="mt-3 mb-1 text-center">
-            <p className="text-sm font-cute text-gray-600 font-bold">{today}</p>
+            <p className="text-sm font-cute text-gray-600">{today}</p>
           </div>
           
           <div className="absolute bottom-3 right-3 opacity-60">
