@@ -1,3 +1,4 @@
+
 import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Camera, X, Download, Loader2, Cat } from "lucide-react";
@@ -47,8 +48,19 @@ const PhotoBooth = () => {
       const constraints = {
         video: {
           facingMode: "user",
-          width: { ideal: window.innerWidth < 768 ? 720 : 1280 },
-          height: { ideal: window.innerWidth < 768 ? 1280 : 720 }
+          width: { ideal: isMobile ? 1280 : 1280 },
+          height: { ideal: isMobile ? 720 : 720 },
+          // Add zoom constraints for mobile
+          ...(isMobile && {
+            zoom: { ideal: 1 },
+            // Adding advanced constraints to reduce the zoom effect
+            advanced: [
+              { 
+                width: { min: 640, ideal: 1280, max: 1920 },
+                height: { min: 480, ideal: 720, max: 1080 }
+              }
+            ]
+          })
         },
         audio: false
       };
@@ -299,16 +311,18 @@ const PhotoBooth = () => {
                 key="camera"
                 className="relative bg-black rounded-2xl overflow-hidden shadow-lg"
                 style={{ 
-                  height: isMobile ? 'calc(100vh - 120px)' : 'auto', // Fill most of the screen on mobile
-                  marginBottom: isMobile ? '80px' : '0', // Space for the toast notification
+                  height: isMobile ? 'calc(100vh - 120px)' : 'auto',
+                  marginBottom: isMobile ? '80px' : '0',
+                  // Add object-fit contain for mobile to reduce zoom effect
+                  ...(isMobile && { objectFit: 'contain' })
                 }}
                 {...scaleIn}
               >
                 <div className="relative h-full">
                   <video
                     ref={videoRef}
-                    className="w-full h-full rounded-2xl object-cover"
-                    style={{ transform: "scaleX(-1)" }}  // Mirror the video for the preview
+                    className={`w-full h-full rounded-2xl ${isMobile ? 'object-contain' : 'object-cover'}`}
+                    style={{ transform: "scaleX(-1)" }}
                     autoPlay
                     playsInline
                     muted
