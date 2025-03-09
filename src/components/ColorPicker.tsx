@@ -16,7 +16,7 @@ const ColorPicker = ({ onChange, selectedColor }: ColorPickerProps) => {
     { name: "Mint Green", value: "#D4F0DB" },
     { name: "Lavender", value: "#E5DEFF" },
     { name: "Coral", value: "#FF8A80" },
-    { name: "Dark Gray", value: "#E5E5E5" },
+    { name: "White", value: "#FFFFFF" },
     { name: "Black", value: "#000000" },
   ];
 

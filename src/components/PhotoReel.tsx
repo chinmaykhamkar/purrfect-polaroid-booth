@@ -11,7 +11,7 @@ interface PhotoReelProps {
 
 const PhotoReel = ({ photos, color }: PhotoReelProps) => {
   const today = format(new Date(), "MMMM d, yyyy");
-  const fixedRotate = 1.5; // Fixed subtle rotation of 1.5 degrees
+  const fixedRotate = 20; // Fixed subtle rotation of 1.5 degrees
   
   // Animation for photos dropping from above with a more realistic feel
   const containerVariants = {
@@ -36,9 +36,9 @@ const PhotoReel = ({ photos, color }: PhotoReelProps) => {
   
   return (
     <motion.div
-      className="relative w-72 md:w-80 mx-auto overflow-hidden p-4 shadow-xl"
+      className="relative w-72 md:w-80 mx-auto overflow-hidden p-4 shadow-xl rounded-sm"
       style={{ 
-        backgroundColor: color,
+        backgroundColor: color, 
         transform: `rotate(${fixedRotate}deg)`,
         transformOrigin: "center"
       }}
@@ -47,7 +47,7 @@ const PhotoReel = ({ photos, color }: PhotoReelProps) => {
       variants={containerVariants}
       whileHover={{ scale: 1.02, transition: { duration: 0.3 } }}
     >
-      <div className="p-2">
+      <div>
         {photos.map((photo, index) => (
           <div 
             key={index}
