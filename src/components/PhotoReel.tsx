@@ -18,18 +18,16 @@ const PhotoReel = ({ photos, color }: PhotoReelProps) => {
     hidden: { 
       opacity: 0, 
       y: -200,
-      rotate: fixedRotate - 5
     },
     visible: { 
       opacity: 1, 
       y: 0,
-      rotate: fixedRotate,
       transition: { 
         type: "spring",
-        mass: 0.8,
-        damping: 12,
-        stiffness: 100,
-        duration: 1.2,
+        mass: 1.2, // Increased mass for slower movement
+        damping: 15, // Increased damping for less bouncy effect
+        stiffness: 80, // Reduced stiffness for slower movement
+        duration: 1.8, // Longer duration
         ease: "easeOut",
         when: "beforeChildren"
       }
@@ -48,6 +46,7 @@ const PhotoReel = ({ photos, color }: PhotoReelProps) => {
         className="relative overflow-hidden"
         style={{ 
           backgroundColor: color,
+          transform: `rotate(${fixedRotate}deg)`, // Apply tilt only to inner content
           transformOrigin: "center" 
         }}
         whileHover={{ scale: 1.02, transition: { duration: 0.3 } }}
