@@ -231,7 +231,7 @@ const PhotoBooth = () => {
               transition={{ duration: 0.6, delay: 0.8 }}
             >
               <img
-                src={"/public/img/cat1.jpg"}
+                src={"/img/cat1.jpg"}
                 alt="Sample polaroid"
                 className="w-full h-auto object-cover rounded-sm shadow-polaroid bg-cream"
               />
@@ -243,7 +243,7 @@ const PhotoBooth = () => {
               transition={{ duration: 0.6, delay: 0.8 }}
             >
               <img
-                src={"/public/img/cat3.jpg"}
+                src={"/img/cat3.jpg"}
                 alt="Sample polaroid"
                 className="w-full h-auto object-cover rounded-sm shadow-polaroid bg-cream"
               />
@@ -255,7 +255,7 @@ const PhotoBooth = () => {
               transition={{ duration: 0.6, delay: 0.8 }}
             >
               <img
-                src={"/public/img/cat4.jpg"}
+                src={"/img/cat4.jpg"}
                 alt="Sample polaroid"
                 className="w-full h-auto object-cover rounded-sm shadow-polaroid bg-cream"
               />
