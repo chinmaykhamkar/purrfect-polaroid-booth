@@ -205,12 +205,36 @@ const PhotoBooth = () => {
           >
             <motion.div
               className="w-56 md:w-64 relative"
-              initial={{ y: 50, opacity: 0, rotate: -3 }}
-              animate={{ y: 0, opacity: 1, rotate: -3 }}
+              initial={{ y: 50, opacity: 0, rotate: -5 }}
+              animate={{ y: 0, opacity: 1, rotate: 5 }}
               transition={{ duration: 0.6, delay: 0.8 }}
             >
               <img 
-                src={`${import.meta.env.BASE_URL || '/'}placeholder.svg`} 
+                src='../../public/cat1.jpg' 
+                alt="Sample polaroid" 
+                className="w-full h-auto object-cover rounded-sm shadow-polaroid bg-cream"
+              />
+            </motion.div>
+            <motion.div
+              className="w-56 md:w-64 relative"
+              initial={{ y: 50, opacity: 0, rotate: 0 }}
+              animate={{ y: 0, opacity: 1, rotate: 0 }}
+              transition={{ duration: 0.6, delay: 0.8 }}
+            >
+              <img 
+                src='../../public/cat3.jpg' 
+                alt="Sample polaroid" 
+                className="w-full h-auto object-cover rounded-sm shadow-polaroid bg-cream"
+              />
+            </motion.div>
+            <motion.div
+              className="w-56 md:w-64 relative"
+              initial={{ y: 50, opacity: 0, rotate: -5 }}
+              animate={{ y: 0, opacity: 1, rotate: -5 }}
+              transition={{ duration: 0.6, delay: 0.8 }}
+            >
+              <img 
+                src='../../public/cat4.jpg' 
                 alt="Sample polaroid" 
                 className="w-full h-auto object-cover rounded-sm shadow-polaroid bg-cream"
               />

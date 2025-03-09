@@ -1,6 +1,5 @@
-
 import { motion } from "framer-motion";
-import { Camera, Cat } from "lucide-react";
+import { Camera, Cat, Github } from "lucide-react";
 import { slideDown } from "@/lib/animations";
 
 const Header = () => {
@@ -20,16 +19,18 @@ const Header = () => {
       </motion.div>
 
       <motion.div 
+        className="flex items-center gap-2 md:gap-3"
         initial={{ opacity: 0, x: 20 }}
         animate={{ opacity: 1, x: 0 }}
         transition={{ duration: 0.5, delay: 0.2 }}
       >
         <a 
-          href="#" 
-          className="flex items-center gap-1 md:gap-2 bg-primary text-primary-foreground px-3 py-1.5 md:px-4 md:py-2 text-sm md:text-base rounded-full transition-all duration-200 hover:shadow-md hover:bg-primary/90"
+          href="https://github.com/chinmaykhamkar/purrfect-polaroid-booth" 
+          target="_blank" 
+          rel="noopener noreferrer" 
+          className="flex items-center gap-2 bg-primary text-primary-foreground px-3 py-1.5 md:px-4 md:py-2 text-sm md:text-base rounded-full transition-all duration-200 hover:shadow-md hover:bg-primary/90"
         >
-          <Camera className="h-3 w-3 md:h-4 md:w-4" />
-          <span>Start Booth</span>
+          <Github className="h-4 w-4 md:h-5 md:w-5"/>
         </a>
       </motion.div>
     </motion.header>
@@ -37,3 +38,4 @@ const Header = () => {
 };
 
 export default Header;
+
