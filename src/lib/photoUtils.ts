@@ -1,14 +1,24 @@
-
 import html2canvas from "html2canvas";
 
 export const downloadPhotoReel = async (reelRef: React.RefObject<HTMLDivElement>) => {
-  if (!reelRef.current) return;
+  if (!reelRef.current) return false;
   
   try {
-    const canvas = await html2canvas(reelRef.current, {
+    // Find the download container
+    const container = reelRef.current.querySelector('.download-container');
+    if (!container) return false;
+    
+    // Calculate the actual container height including all content
+    const actualHeight = container.scrollHeight;
+    
+    const canvas = await html2canvas(container, {
       scale: 2, // Higher quality
       backgroundColor: null,
-      logging: false
+      logging: false,
+      height: actualHeight,
+      useCORS: true,
+      imageTimeout: 0,
+      allowTaint: true
     });
     
     const image = canvas.toDataURL("image/png");

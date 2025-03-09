@@ -10,13 +10,13 @@ interface ColorPickerProps {
 
 const ColorPicker = ({ onChange, selectedColor }: ColorPickerProps) => {
   const colors = [
+    { name: "White", value: "#FFFFFF" },
     { name: "Cream", value: "#FFF8E1" },
     { name: "Soft Pink", value: "#FFD6EC" },
     { name: "Pale Blue", value: "#D0E2FF" },
     { name: "Mint Green", value: "#D4F0DB" },
     { name: "Lavender", value: "#E5DEFF" },
     { name: "Coral", value: "#FF8A80" },
-    { name: "White", value: "#FFFFFF" },
     { name: "Black", value: "#000000" },
   ];
 

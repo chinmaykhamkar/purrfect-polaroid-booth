@@ -1,4 +1,3 @@
-
 import { motion } from "framer-motion";
 import { format } from "date-fns";
 import { Cat } from "lucide-react";
@@ -11,7 +10,7 @@ interface PhotoReelProps {
 
 const PhotoReel = ({ photos, color }: PhotoReelProps) => {
   const today = format(new Date(), "MMMM d, yyyy");
-  const fixedRotate = 20; // Fixed subtle rotation of 1.5 degrees
+  const fixedRotate = 0.8; // Fixed subtle rotation of 1.5 degrees
   
   // Animation for photos dropping from above with a more realistic feel
   const containerVariants = {
@@ -35,42 +34,46 @@ const PhotoReel = ({ photos, color }: PhotoReelProps) => {
   };
   
   return (
-    <motion.div
-      className="relative w-72 md:w-80 mx-auto overflow-hidden p-4 shadow-xl rounded-sm"
-      style={{ 
-        backgroundColor: color, 
-        transform: `rotate(${fixedRotate}deg)`,
-        transformOrigin: "center"
-      }}
-      initial="hidden"
-      animate="visible"
-      variants={containerVariants}
-      whileHover={{ scale: 1.02, transition: { duration: 0.3 } }}
-    >
-      <div>
-        {photos.map((photo, index) => (
-          <div 
-            key={index}
-            className="mb-2 last:mb-0 relative"
-          >
-            <img 
-              src={photo} 
-              alt={`Photo ${index + 1}`}
-              className="w-full h-64 md:h-72 object-cover border border-gray-100"
-              style={{ aspectRatio: "1/1" }}
-            />
+    <div className="download-container" style={{ width: "100%", maxWidth: "350px", margin: "0 auto", transform: `rotate(${fixedRotate}deg)` }}>
+      <motion.div
+        className="relative w-full mx-auto overflow-hidden p-4 shadow-xl"
+        style={{ 
+          backgroundColor: color,
+          transformOrigin: "center",
+          minHeight: photos.length > 0 ? `${(photos.length * 200) + 50}px` : "600px"
+        }}
+        initial="hidden"
+        animate="visible"
+        variants={containerVariants}
+        whileHover={{ scale: 1.02, transition: { duration: 0.3 } }}
+      >
+        <div className="h-full flex flex-col">
+          <div>
+            {photos.map((photo, index) => (
+              <div 
+                key={index}
+                className="mb-3 last:mb-4 relative"
+              >
+                <img 
+                  src={photo} 
+                  alt={`Photo ${index + 1}`}
+                  className="w-full h-auto object-cover border border-gray-100"
+                  style={{ maxHeight: "180px" }}
+                />
+              </div>
+            ))}
           </div>
-        ))}
-        
-        <div className="mt-3 mb-1 text-center">
-          <p className="text-sm font-cute text-gray-600">{today}</p>
+          
+          <div className="mt-3 mb-1 text-center">
+            <p className="text-sm font-cute text-gray-600 font-bold">{today}</p>
+          </div>
+          
+          <div className="absolute bottom-3 right-3 opacity-60">
+            <Cat className="w-4 h-4 text-gray-600" />
+          </div>
         </div>
-      </div>
-      
-      <div className="absolute bottom-3 right-3 opacity-60">
-        <Cat className="w-4 h-4 text-gray-600" />
-      </div>
-    </motion.div>
+      </motion.div>
+    </div>
   );
 };
 
