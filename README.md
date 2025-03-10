@@ -21,7 +21,3 @@ A web-based polaroid photo booth built with React, Vite, and Tailwind CSS.
 
 ![ss3](https://github.com/user-attachments/assets/9a268140-5985-4f33-bf1a-507bfa58f7c0)
 
-
-## License
-
-This project is licensed under the MIT License. See [LICENSE](LICENSE) for details.
