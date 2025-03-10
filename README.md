@@ -12,9 +12,9 @@ A web-based polaroid photo booth built with React, Vite, and Tailwind CSS.
 
 ### Home Page
 
-![ss2](https://github.com/user-attachments/assets/97d677a3-f400-4233-af9c-b7938d5d7afd)
+![ss2](https://github.com/user-attachments/assets/0f1974c7-7b80-49e5-96e3-901af180c1fe)
 
-![ss1](https://github.com/user-attachments/assets/e26e55fe-bb9c-4495-90e7-e23c34d60b74)
+![ss1](https://github.com/user-attachments/assets/6343aaf3-0034-463e-82f0-128886d1b272)
 
 
 ### Photo Reel
